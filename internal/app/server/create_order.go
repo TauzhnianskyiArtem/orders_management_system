@@ -18,8 +18,6 @@ func (s *Server) CreateOrder(ctx context.Context, req *pb.CreateOrderRequest) (*
 
 	order, err := s.OMSUsecase.CreateOrder(ctx, models.UserID(req.GetUserId()), createOrderInfo)
 	if err != nil {
-		// мы можем оборачивать любые ошибки в codes.Internal,
-		// но лучше это делать центрилизовано в одном месте - middleware
 		return nil, err
 	}
 

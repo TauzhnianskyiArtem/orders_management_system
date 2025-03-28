@@ -55,7 +55,6 @@ func New(ctx context.Context, cfg Config, d Deps) (*Server, error) {
 		validator, err := protovalidate.New(
 			protovalidate.WithDisableLazy(true),
 			protovalidate.WithMessages(
-				// Добавляем сюда все запросы наши
 				&pb.CreateOrderRequest{},
 			),
 		)
@@ -108,6 +107,19 @@ func New(ctx context.Context, cfg Config, d Deps) (*Server, error) {
 func (s *Server) Run(ctx context.Context) error {
 
 	go func() {
+		closer.Add(func(ctx context.Context) error {
+			done := make(chan struct{})
+			go func() {
+				s.grpc.server.GracefulStop()
+				close(done)
+			}()
+			select {
+			case <-ctx.Done():
+				return ctx.Err()
+			case <-done:
+				return nil
+			}
+		})
 		logger.Info(ctx, "start serve", s.grpc.lis.Addr())
 		if err := s.grpc.server.Serve(s.grpc.lis); err != nil {
 			logger.Error(ctx, "server: serve grpc: %v", err)
@@ -115,6 +127,7 @@ func (s *Server) Run(ctx context.Context) error {
 	}()
 
 	go func() {
+		closer.Add(s.grpcGateway.server.Shutdown)
 		logger.Info(ctx, "start serve", s.grpcGateway.lis.Addr())
 		if err := s.grpcGateway.server.Serve(s.grpcGateway.lis); err != nil {
 			logger.Error(ctx, "server: serve grpc gateway: %v", err)
@@ -127,7 +140,6 @@ func (s *Server) Run(ctx context.Context) error {
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-
 	if err := closer.CloseAll(shutdownCtx); err != nil {
 		return fmt.Errorf("closer: %v", err)
 	}
