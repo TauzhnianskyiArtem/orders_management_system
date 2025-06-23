@@ -31,7 +31,7 @@
   "paths": {
     "/api/v1/orders": {
       "post": {
-        "summary": "CreateOrder - метод создания заказа",
+        "summary": "CreateOrder",
         "operationId": "OrdersManagementSystemService_CreateOrder",
         "responses": {
           "200": {
@@ -50,7 +50,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "CreateOrderRequest - запрос CreateOrder",
+            "description": "CreateOrderRequest",
             "in": "body",
             "required": true,
             "schema": {
@@ -71,15 +71,15 @@
         "delivery_variant_id": {
           "type": "string",
           "format": "uint64",
-          "title": "delivery_variant_id - id способа доставки"
+          "title": "delivery_variant_id"
         },
         "delivery_date": {
           "type": "string",
           "format": "date-time",
-          "title": "delivery_date - срок доставки"
+          "title": "delivery_date"
         }
       },
-      "title": "DeliveryInfo - информация о доставке",
+      "title": "DeliveryInfo",
       "required": [
         "delivery_variant_id",
         "delivery_date"
@@ -96,15 +96,15 @@
         "quantity": {
           "type": "integer",
           "format": "int64",
-          "title": "quantity - количество"
+          "title": "quantity"
         },
         "warehouse_id": {
           "type": "string",
           "format": "uint64",
-          "title": "warehouse_id - id склада, на котором лежит данный SKU"
+          "title": "warehouse_id"
         }
       },
-      "title": "SKU - товарная единица",
+      "title": "SKU",
       "required": [
         "id",
         "quantity",
@@ -117,7 +117,7 @@
         "user_id": {
           "type": "string",
           "format": "uint64",
-          "title": "user_id - id пользователя"
+          "title": "user_id"
         },
         "items": {
           "type": "array",
@@ -125,14 +125,14 @@
             "type": "object",
             "$ref": "#/definitions/CreateOrderRequestSKU"
           },
-          "title": "items - товары в заказе"
+          "title": "items"
         },
         "delivery_info": {
           "$ref": "#/definitions/CreateOrderRequestDeliveryInfo",
-          "title": "delivery_info - информация о доставке"
+          "title": "delivery_info"
         }
       },
-      "description": "CreateOrderRequest - запрос CreateOrder",
+      "description": "CreateOrderRequest",
       "title": "CreateOrderRequest",
       "externalDocs": {
         "description": "Find out more about ABitOfEverything",
@@ -151,12 +151,12 @@
           "type": "string",
           "format": "uuid",
           "example": "2438ac3c-37eb-4902-adef-ed16b4431030",
-          "description": "id созданного заказа",
+          "description": "id",
           "title": "order_id",
           "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
         }
       },
-      "description": "CreateOrderRequest - ответ CreateOrder",
+      "description": "CreateOrderRequest",
       "title": "CreateOrderResponse",
       "externalDocs": {
         "description": "Find out more about ABitOfEverything",
